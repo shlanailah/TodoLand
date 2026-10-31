@@ -3,11 +3,11 @@ import type { Todo } from '../../../shared/types'
 import { formatDate, urgency, urgencyRank } from '../../../shared/date'
 
 const EMOJI: Record<string, string> = {
-  Kuliah: '📚',
-  Pribadi: '🙂',
-  Kerja: '💼',
-  Rumah: '🏠',
-  Kesehatan: '🏃'
+  Kuliah: '🐚',
+  Pribadi: '🌺',
+  Kerja: '🌊',
+  Rumah: '🪸',
+  Kesehatan: '🏄🏼‍♀️'
 }
 const URGENCY_STYLE = {
   red: { color: 'bg-red-500', label: 'Deadline 3 hari lagi atau kurang' },
@@ -117,8 +117,8 @@ export default function TodoTab({ todos, onChange, onBusyChange }: Props): React
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto pr-1">
-        {Object.entries(groups).map(([category, items]) => (
-          <div key={category}>
+        {Object.entries(groups).map(([category, items], index) => (
+          <div key={category} className={index === 0 ? '' : 'border-t border-white/25 pt-3'}>
             <h3 className="mb-1 font-semibold">
               {EMOJI[category] ?? '📌'} {category}
             </h3>

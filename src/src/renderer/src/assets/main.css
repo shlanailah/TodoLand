@@ -7,4 +7,6 @@ body,
   background: transparent; /* wajib, supaya jendela benar-benar transparan */
   overflow: hidden;
   user-select: none;
+
+  font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
 }

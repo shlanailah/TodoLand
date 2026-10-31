@@ -82,7 +82,7 @@ export default function App(): React.JSX.Element {
         transition={{ type: 'spring', stiffness: 400, damping: 32 }}
         style={{ borderRadius: open ? '0 0 24px 24px' : '0 0 16px 16px' }}
         className={`overflow-hidden bg-black text-white shadow-2xl ${
-          open ? 'w-[420px] h-screen' : 'w-[320px] h-[60px]'
+          open ? 'w-[420px] h-screen' : 'w-[320px] h-[45px]'
         }`}
       >
         <AnimatePresence mode="wait">
@@ -94,7 +94,7 @@ export default function App(): React.JSX.Element {
               exit={{ opacity: 0 }}
               className="flex h-full items-center justify-between px-4 text-sm"
             >
-              <span>🏝 TodoLand</span>
+              <span>°.🐚⋆❀˖°🫧 TodoLand</span>
               <span className="flex min-w-0 items-center gap-2 text-white/70">
                 {dueToday && (
                   <span

@@ -14,7 +14,7 @@ function createIsland(): BrowserWindow {
 
   island = new BrowserWindow({
     width: WIDTH,
-    height: Math.round(screenHeight / 2), // panel terbuka = setengah tinggi layar
+    height: Math.round((screenHeight * 2) / 5), // panel terbuka = 2/5 tinggi layar
     x: Math.round((screenWidth - WIDTH) / 2),
     y: 0,
     frame: false,

@@ -29,7 +29,7 @@ export default function ChatTab({ chat, focusSignal, onBusyChange }: Props): Rea
   return (
     <div className="flex flex-1 flex-col gap-3 overflow-hidden">
       <div className="flex-1 overflow-y-auto text-sm">
-        {loading && <p className="animate-pulse text-white/60">✨ Gemini sedang berpikir…</p>}
+        {loading && <p className="animate-pulse text-white/60">✨ Sedang memproses…</p>}
         {error && <p className="text-red-400">{error}</p>}
         {drafts && (
           <div className="space-y-2">
