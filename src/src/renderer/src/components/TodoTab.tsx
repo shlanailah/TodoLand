@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Todo } from '../../../shared/types'
+import { formatDate, urgency, urgencyRank } from '../../../shared/date'
 
 const EMOJI: Record<string, string> = {
   Kuliah: '📚',
@@ -8,8 +9,10 @@ const EMOJI: Record<string, string> = {
   Rumah: '🏠',
   Kesehatan: '🏃'
 }
-const PRIORITY_RANK = { high: 0, medium: 1, low: 2 }
-const PRIORITY_COLOR = { high: 'bg-red-500', medium: 'bg-yellow-500', low: 'bg-green-500' }
+const URGENCY_STYLE = {
+  red: { color: 'bg-red-500', label: 'Deadline 3 hari lagi atau kurang' },
+  yellow: { color: 'bg-yellow-500', label: 'Deadline dalam 7 hari' }
+}
 
 type Props = {
   todos: Todo[]
@@ -20,19 +23,38 @@ type Props = {
 export default function TodoTab({ todos, onChange, onBusyChange }: Props): React.JSX.Element {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [draftTitle, setDraftTitle] = useState('')
+  const [dateEditingId, setDateEditingId] = useState<string | null>(null)
   const skipBlurSave = useRef(false)
   const editInput = useRef<HTMLInputElement>(null)
+  const dateInput = useRef<HTMLInputElement>(null)
 
-  // Jangan tutup island selama judul todo sedang diedit.
+  // Jangan tutup island selama judul/tanggal todo sedang diedit.
   useEffect(() => {
-    onBusyChange?.(editingId !== null)
-  }, [editingId, onBusyChange])
+    onBusyChange?.(editingId !== null || dateEditingId !== null)
+  }, [editingId, dateEditingId, onBusyChange])
 
   useEffect(() => () => onBusyChange?.(false), [onBusyChange])
 
   useEffect(() => {
     if (editingId) editInput.current?.focus()
   }, [editingId])
+
+  // Langsung buka kalender saat tanggal diklik.
+  useEffect(() => {
+    if (!dateEditingId) return
+    dateInput.current?.focus()
+    try {
+      dateInput.current?.showPicker()
+    } catch {
+      // showPicker tidak tersedia / ditolak: input tetap bisa diketik manual
+    }
+  }, [dateEditingId])
+
+  const saveDate = (todo: Todo, due: string): void => {
+    setDateEditingId(null)
+    if (due === (todo.due ?? '')) return
+    void window.todoland.updateTodo(todo.id, { due }).then(onChange)
+  }
 
   const startEdit = (todo: Todo): void => {
     skipBlurSave.current = false
@@ -57,7 +79,7 @@ export default function TodoTab({ todos, onChange, onBusyChange }: Props): React
     setEditingId(null)
     if (!title || title === todo.title) return
 
-    void window.todoland.updateTodo(todo.id, title).then(onChange)
+    void window.todoland.updateTodo(todo.id, { title }).then(onChange)
   }
 
   if (!todos.length) {
@@ -67,7 +89,7 @@ export default function TodoTab({ todos, onChange, onBusyChange }: Props): React
   const sorted = [...todos].sort(
     (a, b) =>
       Number(a.done) - Number(b.done) ||
-      PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority] ||
+      urgencyRank(a) - urgencyRank(b) ||
       (a.due ?? '9999').localeCompare(b.due ?? '9999')
   )
 
@@ -131,8 +153,39 @@ export default function TodoTab({ todos, onChange, onBusyChange }: Props): React
                     {t.title}
                   </span>
                 )}
-                {t.due && <span className="text-xs text-white/50">{t.due}</span>}
-                <span className={`h-2 w-2 rounded-full ${PRIORITY_COLOR[t.priority]}`} />
+                {dateEditingId === t.id ? (
+                  <input
+                    ref={dateInput}
+                    type="date"
+                    defaultValue={t.due ?? ''}
+                    onChange={(e) => saveDate(t, e.target.value)}
+                    onBlur={() => setDateEditingId(null)}
+                    onKeyDown={(e) => e.key === 'Escape' && setDateEditingId(null)}
+                    className="rounded bg-white/10 px-1 text-xs outline-none [color-scheme:dark]"
+                  />
+                ) : (
+                  <button
+                    onClick={() => setDateEditingId(t.id)}
+                    title="Klik untuk mengubah tanggal"
+                    className={`rounded px-1 text-xs hover:bg-white/10 ${
+                      t.due ? 'text-white/50' : 'text-white/30 opacity-0 group-hover:opacity-100'
+                    }`}
+                  >
+                    {t.due ? formatDate(t.due) : '+ tanggal'}
+                  </button>
+                )}
+                {(() => {
+                  const u = urgency(t)
+                  // Slot tetap 8px supaya tombol ✕ tidak bergeser walau tanpa titik
+                  return u ? (
+                    <span
+                      title={URGENCY_STYLE[u].label}
+                      className={`h-2 w-2 shrink-0 rounded-full ${URGENCY_STYLE[u].color}`}
+                    />
+                  ) : (
+                    <span className="w-2 shrink-0" />
+                  )
+                })()}
                 <button
                   onClick={async () => onChange(await window.todoland.removeTodo(t.id))}
                   className="opacity-0 group-hover:opacity-100"

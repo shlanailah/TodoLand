@@ -13,3 +13,6 @@ export type Todo = {
 
 // Hasil dari LLM sebelum disimpan (belum punya id/done)
 export type TodoDraft = Omit<Todo, 'id' | 'done' | 'createdAt'>
+
+// Field yang bisa diedit dari tab Todo
+export type TodoPatch = Partial<Pick<Todo, 'title' | 'due'>>

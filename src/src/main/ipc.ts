@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
 import { planToTodos } from './llm'
 import { listTodos, addTodos, toggleTodo, removeTodo, updateTodo, clearDone } from './store'
-import type { TodoDraft } from '../shared/types'
+import type { TodoDraft, TodoPatch } from '../shared/types'
 
 export function registerIpc(): void {
   ipcMain.handle('llm:plan', async (_e, text: string) => {
@@ -25,6 +25,6 @@ export function registerIpc(): void {
   ipcMain.handle('todos:add', (_e, drafts: TodoDraft[]) => addTodos(drafts))
   ipcMain.handle('todos:toggle', (_e, id: string) => toggleTodo(id))
   ipcMain.handle('todos:remove', (_e, id: string) => removeTodo(id))
-  ipcMain.handle('todos:update', (_e, id: string, title: string) => updateTodo(id, title))
+  ipcMain.handle('todos:update', (_e, id: string, patch: TodoPatch) => updateTodo(id, patch))
   ipcMain.handle('todos:clear-done', () => clearDone())
 }

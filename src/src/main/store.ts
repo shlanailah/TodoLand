@@ -1,6 +1,6 @@
 import Store from 'electron-store'
 import { randomUUID } from 'crypto'
-import type { Todo, TodoDraft } from '../shared/types'
+import type { Todo, TodoDraft, TodoPatch } from '../shared/types'
 
 const store = new Store<{ todos: Todo[] }>({ defaults: { todos: [] } })
 
@@ -31,10 +31,15 @@ export function removeTodo(id: string): Todo[] {
   return listTodos()
 }
 
-export function updateTodo(id: string, title: string): Todo[] {
+export function updateTodo(id: string, patch: TodoPatch): Todo[] {
   store.set(
     'todos',
-    listTodos().map((t) => (t.id === id ? { ...t, title } : t))
+    listTodos().map((t) => {
+      if (t.id !== id) return t
+      const next = { ...t, ...patch }
+      if (!next.due) delete next.due // tanggal dikosongkan = hapus deadline
+      return next
+    })
   )
   return listTodos()
 }

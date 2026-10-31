@@ -1,6 +1,7 @@
 import { GoogleGenAI, Type } from '@google/genai'
 import { z } from 'zod'
 import type { TodoDraft } from '../shared/types'
+import { todayLocal } from '../shared/date'
 
 const ai = new GoogleGenAI({
   apiKey: import.meta.env.MAIN_VITE_GEMINI_API_KEY,
@@ -23,7 +24,7 @@ const DraftSchema = z.object({
 })
 
 export async function planToTodos(userText: string): Promise<TodoDraft[]> {
-  const today = new Date().toISOString().slice(0, 10)
+  const today = todayLocal() // jangan toISOString(): itu UTC, bisa mundur sehari di WIB
 
   const res = await ai.models.generateContent({
     model: MODEL,
@@ -32,12 +33,17 @@ export async function planToTodos(userText: string): Promise<TodoDraft[]> {
       systemInstruction: `Kamu adalah asisten TodoLand.
 Ubah rencana kegiatan user menjadi todo list yang spesifik dan bisa langsung dikerjakan.
 Aturan:
-- Pecah kegiatan besar menjadi beberapa langkah kecil bila perlu.
+- Satu kegiatan yang disebut user = satu todo. JANGAN memecahnya menjadi langkah-langkah
+  kecil atau menambah kegiatan yang tidak disebut user.
+- Buat beberapa todo hanya jika user memang menyebut beberapa kegiatan berbeda.
+- Kalau user meminta dipecah/dirinci (misal "pecah jadi langkah-langkah"), baru boleh dipecah.
 - Kelompokkan ke kategori singkat (contoh: Kuliah, Pribadi, Kerja, Rumah, Kesehatan).
-- Tentukan priority (low/medium/high) berdasarkan urgensi.
+- Tentukan priority dari deadline dan bobot kegiatan: deadline hari ini/besok = high,
+  2–3 hari lagi = medium, lebih jauh = low; naikkan satu tingkat untuk ujian/tugas besar.
 - Hari ini ${today}. Pahami kata seperti "besok", "lusa", "minggu depan" lalu isi "due" (YYYY-MM-DD).
 - Isi estimateMinutes bila bisa diperkirakan.
-- Tulis title dalam Bahasa Indonesia, singkat, diawali kata kerja.`,
+- Tulis title dalam Bahasa Indonesia yang rapi: singkat, diawali kata kerja, huruf besar di awal
+  kata dan untuk singkatan. Contoh: "tubes rpl milestone 9" → "Kerjakan Tubes RPL Milestone 9".`,
       responseMimeType: 'application/json',
       responseSchema: {
         type: Type.OBJECT,

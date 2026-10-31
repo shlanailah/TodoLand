@@ -5,17 +5,16 @@ import trayIcon from '../../resources/icon.png?asset'
 import { registerIpc } from './ipc'
 
 const WIDTH = 440
-const HEIGHT = 560
 
 let island: BrowserWindow | null = null
 let tray: Tray | null = null
 
 function createIsland(): BrowserWindow {
-  const { width: screenWidth } = screen.getPrimaryDisplay().workAreaSize
+  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize
 
   island = new BrowserWindow({
     width: WIDTH,
-    height: HEIGHT,
+    height: Math.round(screenHeight / 2), // panel terbuka = setengah tinggi layar
     x: Math.round((screenWidth - WIDTH) / 2),
     y: 0,
     frame: false,
@@ -119,6 +118,9 @@ if (!gotLock) {
     ipcMain.on('island:set-ignore-mouse', (_e, ignore: boolean) => {
       island?.setIgnoreMouseEvents(ignore, { forward: true })
     })
+
+    // Tombol ✕ di island: tutup aplikasi sepenuhnya
+    ipcMain.on('app:quit', () => app.quit())
 
     registerIpc()
     createIsland()
