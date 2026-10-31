@@ -19,10 +19,15 @@ export default function ChatTab({ onBusyChange, onSaved }: Props): React.JSX.Ele
     if (!text.trim() || loading) return
     setLoading(true)
     setError(null)
-    const res = await window.todoland.plan(text)
-    setLoading(false)
-    if (res.ok) setDrafts(res.drafts)
-    else setError(res.error)
+    try {
+      const res = await window.todoland.plan(text)
+      if (res.ok) setDrafts(res.drafts)
+      else setError(res.error)
+    } catch {
+      setError('Terjadi kesalahan. Coba restart aplikasi.')
+    } finally {
+      setLoading(false) // selalu matikan loading, apa pun hasilnya
+    }
   }
 
   const save = async (): Promise<void> => {

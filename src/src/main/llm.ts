@@ -2,10 +2,13 @@ import { GoogleGenAI, Type } from '@google/genai'
 import { z } from 'zod'
 import type { TodoDraft } from '../shared/types'
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.MAIN_VITE_GEMINI_API_KEY })
+const ai = new GoogleGenAI({
+  apiKey: import.meta.env.MAIN_VITE_GEMINI_API_KEY,
+  httpOptions: { timeout: 30_000 } // batalkan kalau Gemini tidak membalas dalam 30 detik
+})
 
 // Cek nama model terbaru yang masuk free tier di AI Studio
-const MODEL = 'gemini-3.8-flash'
+const MODEL = 'gemini-3.5-flash-lite'
 
 const DraftSchema = z.object({
   todos: z.array(
