@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+html, body, #root {
+  margin: 0;
+  background: transparent; /* wajib, supaya jendela benar-benar transparan */
+  overflow: hidden;
+  user-select: none;
+}
