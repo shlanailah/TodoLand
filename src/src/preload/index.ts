@@ -7,7 +7,19 @@ const api = {
   listTodos: () => ipcRenderer.invoke('todos:list'),
   addTodos: (drafts: TodoDraft[]) => ipcRenderer.invoke('todos:add', drafts),
   toggleTodo: (id: string) => ipcRenderer.invoke('todos:toggle', id),
-  removeTodo: (id: string) => ipcRenderer.invoke('todos:remove', id)
+  removeTodo: (id: string) => ipcRenderer.invoke('todos:remove', id),
+  updateTodo: (id: string, title: string) => ipcRenderer.invoke('todos:update', id, title),
+  clearDone: () => ipcRenderer.invoke('todos:clear-done'),
+  onOpen: (callback: () => void) => {
+    const listener = (): void => callback()
+    ipcRenderer.on('island:open', listener)
+    return () => ipcRenderer.removeListener('island:open', listener)
+  },
+  onToggle: (callback: () => void) => {
+    const listener = (): void => callback()
+    ipcRenderer.on('island:toggle', listener)
+    return () => ipcRenderer.removeListener('island:toggle', listener)
+  }
 }
 
 contextBridge.exposeInMainWorld('todoland', api)

@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: todoland
+appId: com.todoland
+productName: TodoLand
 directories:
   buildResources: build
 files:
@@ -13,6 +13,7 @@ asarUnpack:
   - resources/**
 win:
   executableName: todoland
+  icon: build/icon.ico
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

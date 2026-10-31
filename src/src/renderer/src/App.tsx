@@ -4,15 +4,56 @@ import type { Todo } from '../../shared/types'
 import ChatTab from './components/ChatTab'
 import TodoTab from './components/TodoTab'
 
+function todayLocal(): string {
+  const now = new Date()
+  const pad = (n: number): string => String(n).padStart(2, '0')
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`
+}
+
 export default function App(): React.JSX.Element {
   const [open, setOpen] = useState(false)
   const [tab, setTab] = useState<'chat' | 'todo'>('todo')
   const [todos, setTodos] = useState<Todo[]>([])
   const [busy, setBusy] = useState(false) // input fokus / loading
+  const [focusSignal, setFocusSignal] = useState(0) // penanda fokus input dari shortcut
   const closeTimer = useRef<number | undefined>(undefined)
+  const openRef = useRef(false) // cermin state open untuk listener global
+
+  useEffect(() => {
+    openRef.current = open
+  }, [open])
 
   useEffect(() => {
     window.todoland.listTodos().then(setTodos)
+  }, [])
+
+  // Shortcut global & instance kedua: buka island tanpa hover.
+  useEffect(() => {
+    const show = (): void => {
+      window.clearTimeout(closeTimer.current)
+      window.todoland.setIgnoreMouse(false)
+      setTab('chat')
+      setOpen(true)
+      setFocusSignal((n) => n + 1)
+    }
+
+    const toggle = (): void => {
+      if (openRef.current) {
+        window.clearTimeout(closeTimer.current)
+        setOpen(false)
+        window.todoland.setIgnoreMouse(true)
+      } else {
+        show()
+      }
+    }
+
+    const offOpen = window.todoland.onOpen(show)
+    const offToggle = window.todoland.onToggle(toggle)
+
+    return () => {
+      offOpen()
+      offToggle()
+    }
   }, [])
 
   const handleEnter = (): void => {
@@ -29,6 +70,7 @@ export default function App(): React.JSX.Element {
 
   const doneCount = todos.filter((t) => t.done).length
   const nextTodo = todos.find((t) => !t.done)
+  const dueToday = todos.some((t) => !t.done && t.due === todayLocal())
 
   return (
     <div className="flex w-screen justify-center">
@@ -52,8 +94,16 @@ export default function App(): React.JSX.Element {
               className="flex h-full items-center justify-between px-4 text-sm"
             >
               <span>🏝 TodoLand</span>
-              <span className="truncate text-white/70">
-                {todos.length ? `${doneCount}/${todos.length} ✓` : 'Hover untuk mulai'}
+              <span className="flex min-w-0 items-center gap-2 text-white/70">
+                {dueToday && (
+                  <span
+                    title="Ada todo yang deadline-nya hari ini"
+                    className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-red-500 shadow-[0_0_8px_2px_rgba(239,68,68,0.7)]"
+                  />
+                )}
+                <span className="truncate">
+                  {todos.length ? `${doneCount}/${todos.length} ✓` : 'Hover untuk mulai'}
+                </span>
               </span>
             </motion.div>
           ) : (
@@ -85,6 +135,7 @@ export default function App(): React.JSX.Element {
 
               {tab === 'chat' ? (
                 <ChatTab
+                  focusSignal={focusSignal}
                   onBusyChange={setBusy}
                   onSaved={(list) => {
                     setTodos(list)
@@ -92,7 +143,7 @@ export default function App(): React.JSX.Element {
                   }}
                 />
               ) : (
-                <TodoTab todos={todos} onChange={setTodos} />
+                <TodoTab todos={todos} onChange={setTodos} onBusyChange={setBusy} />
               )}
             </motion.div>
           )}

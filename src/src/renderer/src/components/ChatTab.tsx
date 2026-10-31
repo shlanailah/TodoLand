@@ -1,19 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Todo, TodoDraft } from '../../../shared/types'
 
 type Props = {
+  focusSignal: number
   onBusyChange: (busy: boolean) => void
   onSaved: (todos: Todo[]) => void
 }
 
-export default function ChatTab({ onBusyChange, onSaved }: Props): React.JSX.Element {
+export default function ChatTab({ focusSignal, onBusyChange, onSaved }: Props): React.JSX.Element {
   const [text, setText] = useState('')
   const [focused, setFocused] = useState(false)
   const [loading, setLoading] = useState(false)
   const [drafts, setDrafts] = useState<TodoDraft[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => onBusyChange(focused || loading), [focused, loading, onBusyChange])
+
+  // Saat tab ini dilepas, jangan tinggalkan status busy yang menahan island terbuka.
+  useEffect(() => () => onBusyChange(false), [onBusyChange])
+
+  // Shortcut global / tray meminta input langsung fokus.
+  useEffect(() => {
+    if (focusSignal > 0) inputRef.current?.focus()
+  }, [focusSignal])
 
   const submit = async (): Promise<void> => {
     if (!text.trim() || loading) return
@@ -78,6 +88,7 @@ export default function ChatTab({ onBusyChange, onSaved }: Props): React.JSX.Ele
       </div>
 
       <input
+        ref={inputRef}
         value={text}
         onChange={(e) => setText(e.target.value)}
         onFocus={() => setFocused(true)}

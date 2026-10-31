@@ -11,6 +11,10 @@ declare global {
       addTodos: (drafts: TodoDraft[]) => Promise<Todo[]>
       toggleTodo: (id: string) => Promise<Todo[]>
       removeTodo: (id: string) => Promise<Todo[]>
+      updateTodo: (id: string, title: string) => Promise<Todo[]>
+      clearDone: () => Promise<Todo[]>
+      onOpen: (callback: () => void) => () => void
+      onToggle: (callback: () => void) => () => void
     }
   }
 }

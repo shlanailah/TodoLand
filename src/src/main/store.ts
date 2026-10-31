@@ -30,3 +30,19 @@ export function removeTodo(id: string): Todo[] {
   )
   return listTodos()
 }
+
+export function updateTodo(id: string, title: string): Todo[] {
+  store.set(
+    'todos',
+    listTodos().map((t) => (t.id === id ? { ...t, title } : t))
+  )
+  return listTodos()
+}
+
+export function clearDone(): Todo[] {
+  store.set(
+    'todos',
+    listTodos().filter((t) => !t.done)
+  )
+  return listTodos()
+}
