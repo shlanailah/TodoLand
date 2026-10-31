@@ -1,6 +1,0 @@
-import tailwindcss from '@tailwindcss/vite'
-// ...
-renderer: {
-  // ...
-  plugins: [react(), tailwindcss()]
-}
