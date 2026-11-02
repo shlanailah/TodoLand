@@ -162,38 +162,4 @@ Installer akan muncul di:
 src/dist/todoland-1.0.0-setup.exe
 ```
 
-> ⚠️ Saat build, API key ikut tertanam di dalam aplikasi. Untuk pemakaian pribadi tidak masalah,
-> tetapi **jangan bagikan installer-nya** ke orang lain. Installer juga belum ditandatangani
-> secara digital, jadi Windows SmartScreen bisa menampilkan peringatan.
 
-Script lain:
-
-| Perintah | Fungsi |
-|---|---|
-| `npm run dev` | Menjalankan aplikasi dalam mode development |
-| `npm run build` | Typecheck + build ke folder `out/` |
-| `npm run build:win` | Build installer Windows (NSIS) |
-| `npm run build:unpack` | Build tanpa installer (folder `dist/win-unpacked`) |
-| `npm run typecheck` | Cek TypeScript main + renderer |
-| `npm run lint` | Menjalankan ESLint |
-| `npm run format` | Merapikan format dengan Prettier |
-| `npm start` | Menjalankan hasil build (`out/`) |
-
-## 🛠 Troubleshooting
-
-| Masalah | Solusi |
-|---|---|
-| `Limit gratis tercapai` / error 429 | Kuota Gemini free tier habis. Tunggu sebentar lalu coba lagi. |
-| `Model Gemini tidak tersedia` / error 404 | Ganti `MODEL` di `src/src/main/llm.ts` ke model yang masih tersedia di AI Studio. |
-| `API key tidak valid` | Cek kembali isi `src/.env`, lalu restart `npm run dev`. |
-| Gemini terlalu lama membalas | Cek koneksi internet, lalu coba lagi. Timeout diset 30 detik. |
-| Shortcut `Ctrl+Shift+Space` tidak bekerja | Kemungkinan dipakai aplikasi lain. Tutup aplikasi tersebut atau ganti accelerator di `src/src/main/index.ts`. |
-| Font tidak berubah | Pastikan `npm install` sudah dijalankan dan restart `npm run dev`. Font Poppins sudah dibundel lewat `@fontsource`. |
-| Island tidak muncul | Pastikan tidak ada instance TodoLand lain yang sedang berjalan (single instance). |
-
-## 🔐 Privasi & Keamanan
-
-- API key hanya dipakai di **main process**, tidak diekspos ke renderer.
-- File `.env` tidak di-commit ke Git.
-- Gemini **free tier** dapat memakai data untuk meningkatkan model. Jangan memasukkan informasi sensitif.
-- Nama model dan batas free tier bisa berubah sewaktu-waktu; sesuaikan `MODEL` bila terjadi error 404.
