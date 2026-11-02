@@ -136,11 +136,12 @@ export default function App(): React.JSX.Element {
                   </button>
                 ))}
                 <button
-                  onClick={() => window.todoland.quit()}
-                  title="Tutup TodoLand"
+                  onClick={() => window.todoland.minimize()}
+                  title="Sembunyikan TodoLand"
+                  aria-label="Sembunyikan TodoLand"
                   className="ml-auto flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-sm hover:bg-white/20"
                 >
-                  ✕
+                  −
                 </button>
               </div>
 

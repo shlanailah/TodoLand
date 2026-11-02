@@ -4,6 +4,7 @@ declare global {
   interface Window {
     todoland: {
       setIgnoreMouse: (ignore: boolean) => void
+      minimize: () => void
       quit: () => void
       plan: (
         text: string

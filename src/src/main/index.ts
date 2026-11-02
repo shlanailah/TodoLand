@@ -119,7 +119,10 @@ if (!gotLock) {
       island?.setIgnoreMouseEvents(ignore, { forward: true })
     })
 
-    // Tombol ✕ di island: tutup aplikasi sepenuhnya
+    // Tombol — di island: sembunyikan ke tray, aplikasi tetap berjalan
+    ipcMain.on('island:minimize', () => island?.hide())
+
+    // Tetap tersedia untuk keluar sepenuhnya dari kode lain
     ipcMain.on('app:quit', () => app.quit())
 
     registerIpc()

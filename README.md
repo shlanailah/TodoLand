@@ -14,7 +14,7 @@ Gemini akan mengubahnya menjadi todo list yang lengkap dengan kategori, priorita
         └────────────────────────────────────────┘
                     hover ↓
         ┌───────────────────────────────┐
-        │  [💬 Chat]  [📋 Todo]     ✕  │
+        │  [💬 Chat]  [📋 Todo]     −  │
         │                               │
         │  📚 Kuliah                   │
         │    ☐ Kerjakan laporan PBO    │
@@ -95,8 +95,8 @@ npm run dev
 | Mengganti deadline | Klik tanggal pada todo |
 | Menghapus todo | Klik tombol **✕** pada baris todo |
 | Membersihkan todo selesai | Klik **Bersihkan ✓** |
-| Menyembunyikan island | Klik ikon tray → **Tampilkan/Sembunyikan** |
-| Keluar aplikasi | Tombol **✕** di panel atau menu tray → **Quit** |
+| Menyembunyikan island | Tombol **−** di panel, atau klik ikon tray → **Tampilkan/Sembunyikan** |
+| Keluar aplikasi | Menu tray → **Quit** |
 
 ## 📁 Struktur Folder
 

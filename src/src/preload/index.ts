@@ -3,6 +3,7 @@ import type { TodoDraft, TodoPatch } from '../shared/types'
 
 const api = {
   setIgnoreMouse: (ignore: boolean) => ipcRenderer.send('island:set-ignore-mouse', ignore),
+  minimize: () => ipcRenderer.send('island:minimize'),
   quit: () => ipcRenderer.send('app:quit'),
   plan: (text: string) => ipcRenderer.invoke('llm:plan', text),
   listTodos: () => ipcRenderer.invoke('todos:list'),
