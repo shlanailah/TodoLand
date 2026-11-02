@@ -168,27 +168,29 @@ export default function TodoTab({ todos, onChange, onBusyChange }: Props): React
                   className="mt-0.5 shrink-0"
                 />
                 <div className="min-w-0 flex-1">
-                  {editingId === t.id ? (
-                    <input
-                      ref={editInput}
-                      value={draftTitle}
-                      onChange={(e) => setDraftTitle(e.target.value)}
-                      onBlur={() => commitEdit(t)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') commitEdit(t)
-                        if (e.key === 'Escape') cancelEdit()
-                      }}
-                      className="w-full rounded bg-white/10 px-1 text-sm outline-none"
-                    />
-                  ) : (
-                    <span
-                      onDoubleClick={() => startEdit(t)}
-                      title="Double-click untuk mengedit"
-                      className={`block ${t.done ? 'text-white/30 line-through' : ''}`}
-                    >
-                      {t.title}
-                    </span>
-                  )}
+                  <div className="flex items-start gap-2">
+                    {editingId === t.id ? (
+                      <input
+                        ref={editInput}
+                        value={draftTitle}
+                        onChange={(e) => setDraftTitle(e.target.value)}
+                        onBlur={() => commitEdit(t)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') commitEdit(t)
+                          if (e.key === 'Escape') cancelEdit()
+                        }}
+                        className="min-w-0 flex-1 rounded bg-white/10 px-1 text-sm outline-none"
+                      />
+                    ) : (
+                      <span
+                        onDoubleClick={() => startEdit(t)}
+                        title="Double-click untuk mengedit"
+                        className={`min-w-0 flex-1 ${t.done ? 'text-white/30 line-through' : ''}`}
+                      >
+                        {t.title}
+                      </span>
+                    )}
+                  </div>
                   {notesEditingId === t.id ? (
                     <textarea
                       ref={notesInput}
@@ -214,17 +216,18 @@ export default function TodoTab({ todos, onChange, onBusyChange }: Props): React
                     >
                       {t.notes}
                     </button>
-                  ) : (
+                  ) : null}
+                </div>
+                <div className="mt-0.5 flex shrink-0 items-center gap-1">
+                  {!t.notes && notesEditingId !== t.id && dateEditingId !== t.id && (
                     <button
                       onClick={() => startNotesEdit(t)}
                       title="Tambah catatan"
-                      className="mt-0.5 text-xs text-white/30 opacity-0 hover:text-white/70 group-hover:opacity-100"
+                      className="rounded px-1 text-xs text-white/30 opacity-0 hover:bg-white/10 hover:text-white/70 focus-visible:opacity-100 group-hover:opacity-100"
                     >
                       + catatan
                     </button>
                   )}
-                </div>
-                <div className="mt-0.5 flex shrink-0 items-center gap-1">
                   {dateEditingId === t.id ? (
                     <input
                       ref={dateInput}
