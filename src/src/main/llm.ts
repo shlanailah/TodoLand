@@ -18,7 +18,8 @@ const DraftSchema = z.object({
       category: z.string().min(1),
       priority: z.enum(['low', 'medium', 'high']),
       due: z.string().optional(),
-      estimateMinutes: z.number().optional()
+      estimateMinutes: z.number().optional(),
+      notes: z.string().optional()
     })
   )
 })
@@ -42,6 +43,8 @@ Aturan:
   2–3 hari lagi = medium, lebih jauh = low; naikkan satu tingkat untuk ujian/tugas besar.
 - Hari ini ${today}. Pahami kata seperti "besok", "lusa", "minggu depan" lalu isi "due" (YYYY-MM-DD).
 - Isi estimateMinutes bila bisa diperkirakan.
+- Isi notes (opsional) hanya jika user menyebut detail tambahan untuk todo itu, misalnya jam,
+  tempat, syarat, atau hal penting lain. Tulis singkat dan jangan mengarang.
 - Tulis title dalam Bahasa Indonesia yang rapi: singkat, diawali kata kerja, huruf besar di awal
   kata dan untuk singkatan. Contoh: "tubes rpl milestone 9" → "Kerjakan Tubes RPL Milestone 9".`,
       responseMimeType: 'application/json',
@@ -57,7 +60,8 @@ Aturan:
                 category: { type: Type.STRING },
                 priority: { type: Type.STRING, enum: ['low', 'medium', 'high'] },
                 due: { type: Type.STRING },
-                estimateMinutes: { type: Type.NUMBER }
+                estimateMinutes: { type: Type.NUMBER },
+                notes: { type: Type.STRING }
               },
               required: ['title', 'category', 'priority']
             }

@@ -51,6 +51,7 @@ export default function ChatTab({ chat, focusSignal, onBusyChange }: Props): Rea
                 />
                 <div>
                   <div>{d.title}</div>
+                  {d.notes && <div className="text-xs text-white/40">{d.notes}</div>}
                   <div className="text-xs text-white/50">
                     {d.category}
                     {d.due && ` · ${formatDate(d.due)}`}

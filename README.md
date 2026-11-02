@@ -31,6 +31,7 @@ Gemini akan mengubahnya menjadi todo list yang lengkap dengan kategori, priorita
 - **Kategori otomatis** — todo dikelompokkan per kategori dengan emoji.
 - **Prioritas & deadline** — badge urgensi merah/kuning berdasarkan sisa hari menuju deadline.
 - **Edit cepat** — double-click judul untuk mengubahnya, klik tanggal untuk mengganti deadline.
+- **Catatan tambahan** — setiap todo bisa punya catatan bebas; Gemini ikut mengisinya jika kamu menyebut detail seperti jam, tempat, atau syarat.
 - **Hapus & bersihkan** — hapus satu todo atau semua todo yang sudah selesai.
 - **Shortcut global** — `Ctrl+Shift+Space` untuk membuka island dan langsung fokus ke input chat.
 - **System tray** — tampilkan/sembunyikan island, aktifkan start on login, atau keluar dari aplikasi.
@@ -93,6 +94,7 @@ npm run dev
 | Menyelesaikan todo | Centang checkbox di tab **Todo** |
 | Mengedit judul | Double-click judul todo |
 | Mengganti deadline | Klik tanggal pada todo |
+| Menambah/mengedit catatan | Klik catatan pada todo, atau **+ catatan** saat hover |
 | Menghapus todo | Klik tombol **✕** pada baris todo |
 | Membersihkan todo selesai | Klik **Bersihkan ✓** |
 | Menyembunyikan island | Tombol **−** di panel, atau klik ikon tray → **Tampilkan/Sembunyikan** |

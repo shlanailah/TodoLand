@@ -38,6 +38,7 @@ export function updateTodo(id: string, patch: TodoPatch): Todo[] {
       if (t.id !== id) return t
       const next = { ...t, ...patch }
       if (!next.due) delete next.due // tanggal dikosongkan = hapus deadline
+      if (!next.notes) delete next.notes // catatan dikosongkan = hapus notes
       return next
     })
   )

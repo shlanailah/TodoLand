@@ -7,6 +7,7 @@ export type Todo = {
   priority: Priority
   due?: string // format YYYY-MM-DD
   estimateMinutes?: number
+  notes?: string // catatan tambahan bebas
   done: boolean
   createdAt: string
 }
@@ -15,4 +16,4 @@ export type Todo = {
 export type TodoDraft = Omit<Todo, 'id' | 'done' | 'createdAt'>
 
 // Field yang bisa diedit dari tab Todo
-export type TodoPatch = Partial<Pick<Todo, 'title' | 'due'>>
+export type TodoPatch = Partial<Pick<Todo, 'title' | 'due' | 'notes'>>
